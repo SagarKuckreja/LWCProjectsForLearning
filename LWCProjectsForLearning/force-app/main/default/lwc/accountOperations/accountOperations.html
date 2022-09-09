@@ -1,0 +1,148 @@
+<template>
+<lightning-card  title= "Account Details">
+    <lightning-button label="Add" slot="actions" onclick={openModal}></lightning-button>
+    <lightning-button label="Delete" slot="actions" onclick={openModalForDelete}></lightning-button>
+    <lightning-button label="Update" slot="actions" onclick={openModalForUpdate}></lightning-button>
+    <lightning-button label="Refresh" slot="actions" onclick={handleClick}></lightning-button>
+    <lightning-datatable data={data} columns={columns} key-field="id" onrowselection={handleRowSelected}                 
+    selected-rows={selection} oncellchange={handleCellChange}></lightning-datatable>
+    
+    <template if:true={isModalOpen}>
+        
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Account</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning-card>  
+                        <template if:true={spinnerStatus}>      
+                            <div class="spinner">        
+                                    <lightning-spinner variant="brand" alternative-text="Loading..."></lightning-spinner>                      
+                            </div>
+                        </template>    
+                        
+                                    <div class="slds-grid">
+                                        <div>
+                                            <lightning-input type="text"  label="Account Name" value={Name} onchange={handlername}></lightning-input>
+                                            <lightning-input type="Phone" label="Phone" value={Phone} onchange={handlePhone}></lightning-input>                                        </div>
+                                    </div>
+                                    
+                    </lightning-card>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleForSave} title="OK">Save</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    
+    <template if:true={openModalDelete}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Delete Account</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <lightning-input type="text"  label="Account Name" value={Name} onchange={handlername}></lightning-input>
+
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModalForDelete} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleForDelete} title="OK">Delete</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template if:true={openModalUpdate}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true" aria-describedby="modal-content-id-3" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModalupdate}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Edit Account</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+            <lightning-record-edit-form record-id={selectedRowId} object-api-name="Account"
+                    onsuccess={handleSuccess} onsubmit ={handleSubmit}>
+                <lightning-messages>
+                </lightning-messages>
+                <lightning-input-field field-name="Name">
+                </lightning-input-field>
+                <lightning-input-field field-name="Phone">
+                </lightning-input-field>
+                <lightning-button class="slds-m-top_small" variant="brand" type="submit" name="update" label="Update" onclick={refreshModalupdate}>
+                </lightning-button>
+            </lightning-record-edit-form>
+        </div>
+        <!-- Modal/Popup Box LWC footer starts here -->
+        <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick={closeModalupdate} title="Cancel">Cancel</button>
+            
+        </footer>
+    </div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <template if:true={isErrorModalOpen}>
+        
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-04" aria-modal="true" aria-describedby="modal-content-id-4" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeErrorModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Add Account</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                    <H1>No Row Selected</H1>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={closeErrorModal} title="OK">OK</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</lightning-card>
+</template>

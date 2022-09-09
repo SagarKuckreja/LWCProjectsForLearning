@@ -1,0 +1,9 @@
+<template>
+    <lightning-card  title= "Get Value From Key">
+        <p class="slds-p-horizontal_small">
+            <lightning-input type="number" value={key} name="key"  label="Key" onchange={handleChange} ></lightning-input>
+            <lightning-button label="Show Result" onclick={handleClick}></lightning-button>
+            <lightning-input type="number" value={value} name="Value"  label="Value" ></lightning-input>
+        </p>
+    </lightning-card>
+</template>

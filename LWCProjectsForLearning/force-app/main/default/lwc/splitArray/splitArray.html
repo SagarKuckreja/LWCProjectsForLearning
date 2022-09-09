@@ -1,0 +1,30 @@
+<template>
+    <lightning-card  title= "Split Array">
+        <p class="slds-p-horizontal_small">
+            <lightning-input type="text" value={arr} name="Array"  label="Array" onchange={handleChange}></lightning-input>
+            <lightning-button label="Create" onclick={handleClick}></lightning-button>
+        </p>
+        <template if:true={isShowTabel}>    
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered table-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="slds-truncate" title="Name">Table Values</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={value} for:item='item' for:index="indexVar">
+                            <tr class="slds-hint-parent" key={item.Id}>
+                                <td>
+                                    <lightning-input readonly="true" value={item} data-id={item.Id}>
+                                    </lightning-input>
+                                </td>
+                                </tr>
+                               
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+    </lightning-card>
+    </template>
